@@ -18,7 +18,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from typing import Any, Generator
-
+import streamlit as st
 import requests
 from pydantic import BaseModel, Field
 
@@ -94,8 +94,8 @@ class GroqService:
         temperature: float | None = None,
         max_tokens: int | None = None,
     ) -> None:
-        self.groq_key = get_groq_api_key()
-        self.openai_key = get_openai_api_key()
+        self.groq_key = st.secrets.get("GROQ_API_KEY")
+        self.openai_key = st.secrets.get("OPENAI_API_KEY")
         self.model = model or get_config_value("models.groq.default", "llama-3.3-70b-versatile")
         self.temperature = temperature if temperature is not None else get_config_value("inference.temperature", 0.3)
         self.max_tokens = max_tokens or get_config_value("inference.max_tokens", 256)
