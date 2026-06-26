@@ -108,22 +108,18 @@ def _render_api_status(groq_service: GroqService) -> None:
     st.markdown(_badge(oai_ok, "OpenAI (fallback)"), unsafe_allow_html=True)
 
     if not groq_ok:
-        api_key_input = st.text_input(
-            "Enter Groq API Key",
-            type="password",
-            placeholder="gsk_…",
-            key="groq_key_input",
+        st.error(
+            "GROQ_API_KEY is not configured. Please add it to `.streamlit/secrets.toml`."
         )
-        if api_key_input:
-            import os
-            os.environ["GROQ_API_KEY"] = api_key_input
-            groq_service.groq_key = api_key_input
-            st.success("Groq API key saved for this session.")
 
 
 def _render_model_settings(groq_service: GroqService) -> dict:
     """Render model selector, temperature, max tokens."""
-    default_idx = GROQ_MODEL_IDS.index(groq_service.model) if groq_service.model in GROQ_MODEL_IDS else 0
+    default_idx = (
+        GROQ_MODEL_IDS.index(groq_service.model)
+        if groq_service.model in GROQ_MODEL_IDS
+        else 0
+    )
 
     selected_model = st.selectbox(
         "Model",
@@ -159,7 +155,11 @@ def _render_model_settings(groq_service: GroqService) -> dict:
     prediction_mode = st.selectbox(
         "Next Word Prediction",
         options=["word", "3words", "sentence"],
-        format_func=lambda x: {"word": "Next Word", "3words": "Next 3 Words", "sentence": "Complete Sentence"}[x],
+        format_func=lambda x: {
+            "word": "Next Word",
+            "3words": "Next 3 Words",
+            "sentence": "Complete Sentence",
+        }[x],
         key="prediction_mode",
     )
 
@@ -173,7 +173,10 @@ def _render_model_settings(groq_service: GroqService) -> dict:
 
 def _render_feature_toggles() -> dict:
     """Render toggles for individual AI features."""
-    st.markdown("<div style='font-size:.82rem;color:#aaa;margin-bottom:6px;'>Toggle features on/off</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div style='font-size:.82rem;color:#aaa;margin-bottom:6px;'>Toggle features on/off</div>",
+        unsafe_allow_html=True,
+    )
 
     autocomplete = st.toggle("Autocomplete", value=True, key="feat_autocomplete")
     sentiment = st.toggle("Sentiment Analysis", value=True, key="feat_sentiment")
@@ -223,5 +226,6 @@ def _render_stats(groq_service: GroqService) -> None:
 
     if st.button("🗑️ Clear Cache", use_container_width=True):
         from utils.helpers import get_cache
+
         get_cache().clear()
         st.toast("Cache cleared.")
