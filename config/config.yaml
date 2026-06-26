@@ -1,0 +1,96 @@
+app:
+  name: "AI Writing Assistant"
+  version: "1.0.0"
+  description: "Production-grade AI-powered writing assistant"
+  debug: false
+  log_level: "INFO"
+
+api:
+  groq:
+    base_url: "https://api.groq.com/openai/v1"
+    timeout: 30
+    max_retries: 3
+    retry_delay: 1.0
+  openai:
+    base_url: "https://api.openai.com/v1"
+    timeout: 30
+    max_retries: 3
+    retry_delay: 1.0
+
+models:
+  groq:
+    default: "llama-3.3-70b-versatile"
+    available:
+      - id: "llama-3.3-70b-versatile"
+        name: "LLaMA 3.3 70B"
+        context_window: 128000
+        fast: false
+      - id: "llama-3.1-8b-instant"
+        name: "LLaMA 3.1 8B Instant"
+        context_window: 128000
+        fast: true
+      - id: "qwen/qwen3-32b"
+        name: "Qwen3 32B"
+        context_window: 40000
+        fast: false
+      - id: "deepseek-r1-distill-llama-70b"
+        name: "DeepSeek R1 Distill 70B"
+        context_window: 128000
+        fast: false
+  openai:
+    default: "gpt-4o-mini"
+    available:
+      - id: "gpt-4o-mini"
+        name: "GPT-4o Mini"
+        context_window: 128000
+        fast: true
+      - id: "gpt-4o"
+        name: "GPT-4o"
+        context_window: 128000
+        fast: false
+
+inference:
+  temperature: 0.3
+  max_tokens: 256
+  autocomplete_max_tokens: 60
+  stream: false
+
+features:
+  autocomplete:
+    enabled: true
+    debounce_ms: 400
+    min_chars: 10
+    prediction_mode: "sentence"  # word, 3words, sentence
+  sentiment:
+    enabled: true
+    min_chars: 10
+  intent:
+    enabled: true
+    min_chars: 10
+  grammar:
+    enabled: true
+    use_language_tool: true
+  keywords:
+    enabled: true
+    max_keywords: 10
+  ner:
+    enabled: true
+  language_detection:
+    enabled: true
+
+ui:
+  theme: "dark"
+  editor_height: 400
+  sidebar_width: 320
+  show_statistics: true
+  show_live_analysis: true
+  max_history: 50
+
+cache:
+  enabled: true
+  ttl_seconds: 300
+  max_size: 100
+
+rate_limit:
+  requests_per_minute: 30
+  tokens_per_minute: 6000
